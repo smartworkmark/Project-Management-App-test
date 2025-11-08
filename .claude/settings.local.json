@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias '@/*' --skip-install)",
+      "Bash(npm install)",
+      "Bash(npm cache clean:*)",
+      "Bash(sudo chown:*)",
+      "Bash(npm install:*)",
+      "Bash(npm cache verify:*)",
+      "Bash(npm run build:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

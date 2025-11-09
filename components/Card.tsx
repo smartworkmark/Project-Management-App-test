@@ -3,6 +3,7 @@
 import { Task, CardFontSize } from '@/lib/types'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import PromptModal from './PromptModal'
 
 interface CardProps {
   task: Task
@@ -43,6 +44,9 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId, f
   const [description, setDescription] = useState(task.description)
   const [notes, setNotes] = useState(task.notes)
   const [showNotes, setShowNotes] = useState(false)
+  const [showPromptModal, setShowPromptModal] = useState(false)
+  const [generatedPrompt, setGeneratedPrompt] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const classes = fontSizeClasses[fontSize]
 
@@ -63,6 +67,36 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId, f
       notes,
     })
     setIsEditing(false)
+  }
+
+  const handleGeneratePrompt = async () => {
+    setIsGenerating(true)
+    try {
+      const response = await fetch('/api/generate-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: task.title,
+          description: task.description,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        alert(`Error: ${error.error}`)
+        setIsGenerating(false)
+        return
+      }
+
+      const data = await response.json()
+      setGeneratedPrompt(data.prompt)
+      setShowPromptModal(true)
+    } catch (error) {
+      console.error('Error generating prompt:', error)
+      alert('Failed to generate prompt. Please try again.')
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   return (
@@ -87,6 +121,14 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId, f
           <div className="flex justify-between items-start mb-3">
             <h3 className={`font-bold text-tactical-text ${classes.title} break-words flex-1`}>{title || 'Untitled Task'}</h3>
             <div className="flex gap-1 ml-2">
+              <button
+                onClick={handleGeneratePrompt}
+                disabled={isGenerating}
+                className="text-xs px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-tactical-orange hover:text-tactical-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Generate AI prompt"
+              >
+                ✨
+              </button>
               <button
                 onClick={() => setIsEditing(true)}
                 className={`${classes.button} px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-tactical-orange hover:text-tactical-dark transition-all`}
@@ -166,6 +208,13 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId, f
         </div>
       )}
       </motion.div>
+
+      <PromptModal
+        isOpen={showPromptModal}
+        prompt={generatedPrompt}
+        isLoading={isGenerating}
+        onClose={() => setShowPromptModal(false)}
+      />
     </div>
   )
 }

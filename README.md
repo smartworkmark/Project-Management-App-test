@@ -24,6 +24,12 @@ A sleek, tactical-themed Kanban board project management app built with Next.js,
 - Smooth animations with Framer Motion
 - Professional UI inspired by military command systems
 
+✓ **AI Prompt Generator**
+- Click ✨ button on any card to generate a detailed development prompt
+- Uses OpenAI GPT-4o to create actionable prompts
+- Perfect for getting started with Claude Code
+- Copy generated prompt directly to clipboard
+
 ✓ **Local Storage**
 - All data persists in browser's localStorage
 - Auto-save on every change
@@ -35,6 +41,7 @@ A sleek, tactical-themed Kanban board project management app built with Next.js,
 - **TypeScript** - Type safety
 - **Tailwind CSS v3** - Styling
 - **Framer Motion** - Smooth animations
+- **OpenAI GPT-4o** - AI prompt generation
 - **LocalStorage API** - Data persistence
 
 ## Getting Started
@@ -44,6 +51,16 @@ A sleek, tactical-themed Kanban board project management app built with Next.js,
 ```bash
 npm install
 ```
+
+### Configuration
+
+Create a `.env.local` file in the root directory and add your OpenAI API key:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys).
 
 ### Development Server
 
@@ -70,7 +87,10 @@ npm start
 ├── components/
 │   ├── KanbanBoard.tsx      # Main board component
 │   ├── Column.tsx           # Column component
-│   └── Card.tsx             # Task card component
+│   ├── Card.tsx             # Task card component
+│   └── PromptModal.tsx      # AI prompt display modal
+├── app/api/
+│   └── generate-prompt/     # OpenAI API endpoint
 ├── lib/
 │   ├── types.ts             # TypeScript interfaces
 │   └── localStorage.ts      # State management utilities
@@ -86,6 +106,13 @@ Simply click and drag any card to move it between columns. As you drag:
 - The destination column highlights in orange
 - Drop the card to complete the move
 - The card animates smoothly to its new position
+
+### Generating AI Prompts
+Click the **✨** button on any card to generate a detailed development prompt using GPT-4o:
+- The prompt is based on your card's title and description
+- Perfect for getting started with Claude Code
+- Copy the generated prompt directly to clipboard
+- The modal shows a loading spinner while generating
 
 ### Adding Cards
 Click **+ Add Card** in any column to create a new task. Fill in the title, description (optional), and notes (optional).

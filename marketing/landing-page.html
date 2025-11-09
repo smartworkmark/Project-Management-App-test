@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactical Ops - Privacy-First Kanban Board | No Servers. No Tracking.</title>
+    <meta name="description" content="A beautiful, military-themed Kanban board that respects your privacy. No account required. All data stays on your machine. Start organizing in seconds.">
+    <meta property="og:title" content="Tactical Ops - Privacy-First Kanban Board">
+    <meta property="og:description" content="No servers. No tracking. No BS. Project management the way it should be.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tactical Ops - Privacy-First Kanban Board">
+    <meta name="twitter:description" content="Beautiful Kanban board that runs entirely in your browser. Zero setup required.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0a0e27;
+            --dark-alt: #141829;
+            --border: #1a1f3a;
+            --orange: #ff6b35;
+            --orange-light: #ff8c42;
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-alt) 50%, var(--dark) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 100px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border: 2px solid var(--orange);
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: bold;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--orange-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--orange);
+            border: 2px solid var(--orange);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 30px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: rgba(20, 24, 41, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--orange);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            background: rgba(10, 14, 39, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: 40px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: rgba(20, 24, 41, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--orange);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: var(--orange);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 20px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: var(--dark);
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            color: var(--orange);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+        }
+
+        /* Comparison Section */
+        .comparison {
+            padding: 100px 20px;
+            background: rgba(10, 14, 39, 0.5);
+        }
+
+        .comparison-table {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(20, 24, 41, 0.5);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-header {
+            background: rgba(255, 107, 53, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comparison-cell {
+            padding: 20px;
+            text-align: center;
+            border-right: 1px solid var(--border);
+        }
+
+        .comparison-cell:last-child {
+            border-right: none;
+        }
+
+        .comparison-cell:first-child {
+            text-align: left;
+        }
+
+        .check {
+            color: var(--orange);
+            font-size: 1.5rem;
+        }
+
+        .cross {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 20px;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            padding: 30px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: rgba(20, 24, 41, 0.5);
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .testimonial-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 20px 30px;
+            border-top: 2px solid var(--border);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--orange);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--orange);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                letter-spacing: 4px;
+            }
+
+            .section-title {
+                letter-spacing: 2px;
+            }
+
+            .comparison-row {
+                grid-template-columns: 1.5fr 1fr 1fr;
+            }
+
+            .comparison-cell {
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🔒 Privacy First • 🚀 Zero Setup • ⚡ 100% Free</div>
+            <h1>TACTICAL OPS</h1>
+            <p class="hero-subtitle">Mission Control for Your Tasks</p>
+            <p class="hero-description">
+                A beautifully designed Kanban board that runs entirely in your browser.
+                <strong>No account required. No data collected. No servers.</strong>
+                It's project management the way it should be: simple, private, and stunning.
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Start Planning →</a>
+                <a href="https://github.com/yourusername/tactical-ops" class="btn btn-secondary">View on GitHub</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">0KB</span>
+                    <span class="stat-label">Data Sent to Servers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">0 SEC</span>
+                    <span class="stat-label">Setup Time</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">Free Forever</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Core Features</h2>
+                <p class="section-subtitle">Built for operators who value privacy, speed, and style</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Privacy First</h3>
+                    <p class="feature-description">
+                        Your data never leaves your browser. No servers, no accounts, no tracking.
+                        Everything is stored locally on your machine. You're in complete control.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Zero Setup</h3>
+                    <p class="feature-description">
+                        No signup forms. No configuration files. No installation.
+                        Just open and start organizing. It works offline too.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Beautiful Design</h3>
+                    <p class="feature-description">
+                        Tactical military aesthetics meet modern UI/UX. Smooth animations,
+                        clean interface, and a command center vibe that makes work feel epic.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Drag & Drop</h3>
+                    <p class="feature-description">
+                        Intuitive Kanban board with smooth drag-and-drop. Move tasks between
+                        columns effortlessly. Add custom columns on the fly.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Works Everywhere</h3>
+                    <p class="feature-description">
+                        Responsive design works on desktop, tablet, and mobile.
+                        Progressive Web App support means it feels like a native app.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔓</div>
+                    <h3 class="feature-title">Open Source</h3>
+                    <p class="feature-description">
+                        Fully open source on GitHub. Customize it, fork it, make it yours.
+                        Built with Next.js, TypeScript, and Tailwind CSS.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">From zero to organized in three simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Open</h3>
+                    <p class="step-description">Visit the website. No signup, no installation. Just click and go.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Create</h3>
+                    <p class="step-description">Add tasks to columns. Drag and drop to organize. Add custom columns.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Execute</h3>
+                    <p class="step-description">Track your progress. Everything auto-saves. Your data stays on your machine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Tactical Ops?</h2>
+                <p class="section-subtitle">See how we compare to traditional project management tools</p>
+            </div>
+            <div class="comparison-table">
+                <div class="comparison-row comparison-header">
+                    <div class="comparison-cell">Feature</div>
+                    <div class="comparison-cell">Tactical Ops</div>
+                    <div class="comparison-cell">Others</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">No Account Required</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Complete Privacy</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Works Offline</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Zero Setup Time</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">100% Free</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Open Source</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Beautiful Design</div>
+                    <div class="comparison-cell"><span class="check">✓</span></div>
+                    <div class="comparison-cell"><span class="cross">~</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Operators Say</h2>
+                <p class="section-subtitle">Feedback from early users</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "Finally, a Kanban board that doesn't require me to create yet another account.
+                        The tactical theme is sick and it's incredibly fast."
+                    </p>
+                    <div class="testimonial-author">Alex Chen</div>
+                    <div class="testimonial-role">Indie Hacker</div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "I was skeptical about browser-only storage, but this just works.
+                        Love that my project data isn't being sent to some random server."
+                    </p>
+                    <div class="testimonial-author">Sarah Martinez</div>
+                    <div class="testimonial-role">Privacy Advocate</div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "The UX is incredibly smooth. Animations are buttery, design is gorgeous.
+                        This is how productivity tools should look."
+                    </p>
+                    <div class="testimonial-author">Jordan Kim</div>
+                    <div class="testimonial-role">Product Designer</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to Deploy?</h2>
+            <p class="cta-text">
+                Start organizing your projects with Tactical Ops.
+                No credit card. No email. No tracking. Just pure productivity.
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Launch Tactical Ops →</a>
+                <a href="https://github.com/yourusername/tactical-ops" class="btn btn-secondary">Star on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Tactical Ops</h3>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    Privacy-first project management for operators who refuse to compromise.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Roadmap</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <ul>
+                    <li><a href="https://github.com/yourusername/tactical-ops">GitHub</a></li>
+                    <li><a href="#">Discord</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Changelog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">MIT License</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>
+                © 2025 Tactical Ops. Open Source. MIT License.<br>
+                Built with Next.js • TypeScript • Tailwind CSS • Framer Motion
+            </p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">
+                🔒 Your data never leaves your browser • ⚡ No servers • 🎯 No tracking
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

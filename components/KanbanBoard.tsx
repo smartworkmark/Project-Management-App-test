@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { KanbanState, Task } from '@/lib/types'
+import { KanbanState, Task, CardFontSize } from '@/lib/types'
 import {
   getInitialState,
   saveState,
@@ -11,6 +11,7 @@ import {
   moveTask,
   addColumn,
   deleteColumn,
+  updateCardFontSize,
 } from '@/lib/localStorage'
 import Column from './Column'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -68,6 +69,10 @@ export default function KanbanBoard() {
     setState((prev) => (prev ? deleteColumn(prev, columnId) : null))
   }, [])
 
+  const handleFontSizeChange = useCallback((fontSize: CardFontSize) => {
+    setState((prev) => (prev ? updateCardFontSize(prev, fontSize) : null))
+  }, [])
+
   if (!state) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -90,9 +95,46 @@ export default function KanbanBoard() {
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-tactical-orange/20 to-transparent blur-lg rounded-lg"></div>
           <div className="relative bg-tactical-darkAlt border-2 border-tactical-orange p-6 rounded-lg">
-            <h1 className="text-4xl md:text-5xl font-bold text-tactical-orange uppercase tracking-widest mb-2">
-              TACTICAL OPS
-            </h1>
+            <div className="flex justify-between items-start mb-2">
+              <h1 className="text-4xl md:text-5xl font-bold text-tactical-orange uppercase tracking-widest">
+                TACTICAL OPS
+              </h1>
+              <div className="flex flex-col gap-1">
+                <span className="text-tactical-textSecondary text-xs font-mono uppercase tracking-wider">Card Font Size</span>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => handleFontSizeChange('small')}
+                    className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                      state.cardFontSize === 'small'
+                        ? 'bg-tactical-orange text-tactical-dark'
+                        : 'bg-tactical-border text-tactical-text hover:bg-tactical-orange/20'
+                    }`}
+                  >
+                    S
+                  </button>
+                  <button
+                    onClick={() => handleFontSizeChange('medium')}
+                    className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                      state.cardFontSize === 'medium'
+                        ? 'bg-tactical-orange text-tactical-dark'
+                        : 'bg-tactical-border text-tactical-text hover:bg-tactical-orange/20'
+                    }`}
+                  >
+                    M
+                  </button>
+                  <button
+                    onClick={() => handleFontSizeChange('large')}
+                    className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                      state.cardFontSize === 'large'
+                        ? 'bg-tactical-orange text-tactical-dark'
+                        : 'bg-tactical-border text-tactical-text hover:bg-tactical-orange/20'
+                    }`}
+                  >
+                    L
+                  </button>
+                </div>
+              </div>
+            </div>
             <p className="text-tactical-textSecondary text-sm font-mono">
               Mission Control System v2.1.7 | Classified
             </p>
@@ -131,6 +173,7 @@ export default function KanbanBoard() {
                   onUpdateTask={handleUpdateTask}
                   onDeleteColumn={handleDeleteColumn}
                   onMoveTask={handleMoveTask}
+                  fontSize={state.cardFontSize}
                 />
               </motion.div>
             )

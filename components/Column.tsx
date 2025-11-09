@@ -1,6 +1,6 @@
 'use client'
 
-import { Column as ColumnType, Task } from '@/lib/types'
+import { Column as ColumnType, Task, CardFontSize } from '@/lib/types'
 import Card from './Card'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -13,6 +13,7 @@ interface ColumnProps {
   onUpdateTask: (task: Task) => void
   onDeleteColumn?: (columnId: string) => void
   onMoveTask?: (taskId: string, sourceColumnId: string, destColumnId: string, destIndex: number) => void
+  fontSize: CardFontSize
 }
 
 export default function Column({
@@ -23,6 +24,7 @@ export default function Column({
   onUpdateTask,
   onDeleteColumn,
   onMoveTask,
+  fontSize,
 }: ColumnProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [title, setTitle] = useState('')
@@ -107,6 +109,7 @@ export default function Column({
               columnId={column.id}
               onDelete={() => onDeleteTask(task.id)}
               onUpdate={onUpdateTask}
+              fontSize={fontSize}
             />
           ))}
         </motion.div>

@@ -10,6 +10,7 @@ const defaultState: KanbanState = {
     { id: 'col-3', title: 'COMPLETED', taskIds: [] },
   ],
   columnOrder: ['col-1', 'col-2', 'col-3'],
+  cardFontSize: 'medium',
 }
 
 export function getInitialState(): KanbanState {
@@ -19,7 +20,14 @@ export function getInitialState(): KanbanState {
 
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    return stored ? JSON.parse(stored) : defaultState
+    if (!stored) return defaultState
+
+    const parsed = JSON.parse(stored)
+    // Migration: add cardFontSize if it doesn't exist
+    if (!parsed.cardFontSize) {
+      parsed.cardFontSize = 'medium'
+    }
+    return parsed
   } catch (error) {
     console.error('Failed to load state from localStorage:', error)
     return defaultState
@@ -136,5 +144,12 @@ export function deleteColumn(state: KanbanState, columnId: string): KanbanState 
     tasks: newTasks,
     columns: state.columns.filter(col => col.id !== columnId),
     columnOrder: state.columnOrder.filter(id => id !== columnId),
+  }
+}
+
+export function updateCardFontSize(state: KanbanState, cardFontSize: KanbanState['cardFontSize']): KanbanState {
+  return {
+    ...state,
+    cardFontSize,
   }
 }

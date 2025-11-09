@@ -1,3 +1,5 @@
+export type CardFontSize = 'small' | 'medium' | 'large'
+
 export interface Task {
   id: string
   title: string
@@ -16,4 +18,5 @@ export interface KanbanState {
   tasks: Record<string, Task>
   columns: Column[]
   columnOrder: string[]
+  cardFontSize: CardFontSize
 }

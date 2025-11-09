@@ -1,6 +1,6 @@
 'use client'
 
-import { Task } from '@/lib/types'
+import { Task, CardFontSize } from '@/lib/types'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
@@ -10,14 +10,41 @@ interface CardProps {
   onUpdate: (task: Task) => void
   isDragging?: boolean
   columnId: string
+  fontSize: CardFontSize
 }
 
-export default function Card({ task, onDelete, onUpdate, isDragging, columnId }: CardProps) {
+const fontSizeClasses = {
+  small: {
+    title: 'text-xs',
+    description: 'text-[10px]',
+    button: 'text-[10px]',
+    input: 'text-xs',
+    textareaDesc: 'text-[10px]',
+  },
+  medium: {
+    title: 'text-sm',
+    description: 'text-xs',
+    button: 'text-xs',
+    input: 'text-sm',
+    textareaDesc: 'text-xs',
+  },
+  large: {
+    title: 'text-base',
+    description: 'text-sm',
+    button: 'text-xs',
+    input: 'text-base',
+    textareaDesc: 'text-sm',
+  },
+}
+
+export default function Card({ task, onDelete, onUpdate, isDragging, columnId, fontSize }: CardProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description)
   const [notes, setNotes] = useState(task.notes)
   const [showNotes, setShowNotes] = useState(false)
+
+  const classes = fontSizeClasses[fontSize]
 
   const handleDragStart = (e: React.DragEvent) => {
     if (isEditing) {
@@ -58,17 +85,17 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId }:
       {!isEditing ? (
         <>
           <div className="flex justify-between items-start mb-3">
-            <h3 className="font-bold text-tactical-text text-sm break-words flex-1">{title || 'Untitled Task'}</h3>
+            <h3 className={`font-bold text-tactical-text ${classes.title} break-words flex-1`}>{title || 'Untitled Task'}</h3>
             <div className="flex gap-1 ml-2">
               <button
                 onClick={() => setIsEditing(true)}
-                className="text-xs px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-tactical-orange hover:text-tactical-dark transition-all"
+                className={`${classes.button} px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-tactical-orange hover:text-tactical-dark transition-all`}
               >
                 ✎
               </button>
               <button
                 onClick={onDelete}
-                className="text-xs px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-red-600 hover:text-white transition-all"
+                className={`${classes.button} px-2 py-1 rounded bg-tactical-border text-tactical-text hover:bg-red-600 hover:text-white transition-all`}
               >
                 ✕
               </button>
@@ -76,13 +103,13 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId }:
           </div>
 
           {description && (
-            <p className="text-xs text-tactical-textSecondary mb-2 line-clamp-2">{description}</p>
+            <p className={`${classes.description} text-tactical-textSecondary mb-2 line-clamp-2`}>{description}</p>
           )}
 
           {notes && (
             <button
               onClick={() => setShowNotes(!showNotes)}
-              className="text-xs text-tactical-orange hover:text-tactical-orangeLight transition-colors"
+              className={`${classes.description} text-tactical-orange hover:text-tactical-orangeLight transition-colors`}
             >
               {showNotes ? '▼ Notes' : '▶ Notes'}
             </button>
@@ -90,7 +117,7 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId }:
 
           {showNotes && notes && (
             <div className="mt-2 pt-2 border-t border-tactical-border">
-              <p className="text-xs text-tactical-textSecondary">{notes}</p>
+              <p className={`${classes.description} text-tactical-textSecondary`}>{notes}</p>
             </div>
           )}
         </>
@@ -100,27 +127,27 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId }:
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 text-sm text-tactical-text focus:outline-none focus:border-tactical-orange"
+            className={`w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 ${classes.input} text-tactical-text focus:outline-none focus:border-tactical-orange`}
             placeholder="Task title"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 text-xs text-tactical-text focus:outline-none focus:border-tactical-orange resize-none"
+            className={`w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 ${classes.textareaDesc} text-tactical-text focus:outline-none focus:border-tactical-orange resize-none`}
             placeholder="Description"
             rows={2}
           />
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 text-xs text-tactical-text focus:outline-none focus:border-tactical-orange resize-none"
+            className={`w-full bg-tactical-dark border border-tactical-border rounded px-2 py-1 ${classes.textareaDesc} text-tactical-text focus:outline-none focus:border-tactical-orange resize-none`}
             placeholder="Notes"
             rows={2}
           />
           <div className="flex gap-2">
             <button
               onClick={handleSave}
-              className="flex-1 bg-tactical-orange text-tactical-dark font-bold text-xs py-1 rounded hover:bg-tactical-orangeLight transition-all"
+              className={`flex-1 bg-tactical-orange text-tactical-dark font-bold ${classes.button} py-1 rounded hover:bg-tactical-orangeLight transition-all`}
             >
               Save
             </button>
@@ -131,7 +158,7 @@ export default function Card({ task, onDelete, onUpdate, isDragging, columnId }:
                 setNotes(task.notes)
                 setIsEditing(false)
               }}
-              className="flex-1 bg-tactical-border text-tactical-text text-xs py-1 rounded hover:bg-tactical-border transition-all"
+              className={`flex-1 bg-tactical-border text-tactical-text ${classes.button} py-1 rounded hover:bg-tactical-border transition-all`}
             >
               Cancel
             </button>
